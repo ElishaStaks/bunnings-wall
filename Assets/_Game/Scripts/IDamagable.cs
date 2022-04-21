@@ -2,5 +2,5 @@ using UnityEngine;
 
 public interface IDamagable
 {
-    void Damage(RaycastHit hit);
+    void Damage(RaycastHit hit, float damageAmount);
 }

@@ -18,7 +18,7 @@ public class CameraPathMovement : MonoBehaviour
     private bool m_IsMoving = false;
 
     [SerializeField]
-    private CameraStopPointEntry[] m_CameraStopPointEntries;
+    private ActionPointEntry[] m_ActionPointEntries;
 
     [Header("Debug Options")]
     [SerializeField]
@@ -31,10 +31,12 @@ public class CameraPathMovement : MonoBehaviour
 
     private void Start()
     {
-        foreach (var entry in m_CameraStopPointEntries)
+        foreach (var entry in m_ActionPointEntries)
         {
-            entry.cameraStopPoint.Initialise(this);
+            entry.actionPoint.Initialise(this);
         }
+
+        SetCameraMovement(true);
     }
 
     private void Update()
@@ -45,18 +47,18 @@ public class CameraPathMovement : MonoBehaviour
             transform.position = m_Path.path.GetPointAtDistance(m_DistanceTravelled, m_EndOfPathInstruction);
             transform.rotation = m_Path.path.GetRotationAtDistance(m_DistanceTravelled, m_EndOfPathInstruction);
 
-            for (int i = 0; i < m_CameraStopPointEntries.Length; i++)
+            for (int i = 0; i < m_ActionPointEntries.Length; i++)
             {
-                if ((m_Path.path.GetPointAtDistance(m_CameraStopPointEntries[i].distance) - transform.position).sqrMagnitude < 0.001f)
+                if ((m_Path.path.GetPointAtDistance(m_ActionPointEntries[i].distance) - transform.position).sqrMagnitude < 0.001f)
                 {
-                    if (m_CameraStopPointEntries[i].cameraStopPoint.AreaCleared)
+                    if (m_ActionPointEntries[i].actionPoint.AreaCleared)
                     {
                         return;
                     }
 
                     if (m_IsMoving)
                     {
-                        m_CameraStopPointEntries[i].cameraStopPoint.CameraReachedPoint();
+                        m_ActionPointEntries[i].actionPoint.CameraReachedPoint();
                     }
                 }
             }
@@ -82,8 +84,8 @@ public class CameraPathMovement : MonoBehaviour
 }
 
  [System.Serializable]
- public class CameraStopPointEntry
+ public class ActionPointEntry
 {
-    public CameraStopPoint cameraStopPoint;
+    public ActionPoint actionPoint;
     public float distance;
 }
